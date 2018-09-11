@@ -38,8 +38,9 @@ def mlp(inputs,
     out = tf.reshape(inputs, [-1, shape_inp[2]])
   else:
     out = tf.reshape(inputs, [-1, shape_inp[1]])
+  print ('OUT: ', out)
   for i, layer_size in enumerate(layer_sizes):
-    z = tf.layers.fully_connected(out, layer_size, activation_fn)
+    z = tf.contrib.layers.fully_connected(out, layer_size, activation_fn)
 
     if i < len(layer_sizes) - 1 and activation_fn is not None:
       out = activation_fn(z)

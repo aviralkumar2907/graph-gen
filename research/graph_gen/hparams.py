@@ -26,7 +26,7 @@ FLAGS = flags.FLAGS
 
 
 def get_hparams_ChEMBL():
-  return tf.contrib.training.HParams(msg_dim=32,
+  return tf.contrib.training.HParams(msg_dim=4,
                                      edge_features_present=False,
                                      opt_type='adam',
                                      max_grad_norm=4.0,
