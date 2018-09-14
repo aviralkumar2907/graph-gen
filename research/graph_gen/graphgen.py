@@ -323,7 +323,7 @@ class GraphGenerator(object):
         h_omega = real_NVP.mlp(omega,
                        [self.hparams.omega_hidden1, self.hparams.omega_hidden2],
                        activation_fn=tf.nn.relu,
-                       output_nonlinearity=None,
+                       output_act=None,
                        regularizer=None)
 
         with tf.variable_scope('context_scope', reuse=tf.AUTO_REUSE):
@@ -331,7 +331,7 @@ class GraphGenerator(object):
               omega,
               [self.hparams.omega_hidden1, self.hparams.omega_hidden2],
               activation_fn=tf.nn.relu,
-              output_nonlinearity=None,
+              output_act=None,
               regularizer=None)
         context_omega = tf.reduce_sum(context_omega*mask, axis=1)
         h_omega_new = tf.expand_dims(h_omega*mask, axis=2)
@@ -351,7 +351,7 @@ class GraphGenerator(object):
           z_mat = real_NVP.mlp(node_feat,
                                  [self.hparams.combiner_hidden1, 1],
                                  activation_fn=tf.nn.tanh,
-                                 output_nonlinearity=tf.log_sigmoid,
+                                 output_act=tf.log_sigmoid,
                                  regularizer=None)
 
         z_mat = tf.reshape(z_mat, [batch_size, num_nodes, num_nodes, 1])
@@ -363,7 +363,7 @@ class GraphGenerator(object):
                 node_feat,
                 [self.hparams.combiner_hidden1, self.n_edge_types+1],
                 activation_fn=tf.nn.tanh,
-                output_nonlinearity=tf.nn.log_softmax,
+                output_act=tf.nn.log_softmax,
                 regularizer=None)
           edge_feat = tf.reshape(edge_feat,
                                  [batch_size, num_nodes,
@@ -379,7 +379,7 @@ class GraphGenerator(object):
       s_omega = real_NVP.mlp(omega,
                      [self.hparams.omega_scale1, self.hparams.omega_scale2],
                      activation_fn=tf.nn.tanh,
-                     output_nonlinearity=None,
+                     output_act=None,
                      regularizer=None)
       s_omega_new = tf.expand_dims(s_omega, axis=2)
       s_omega_perm = s_omega_new + tf.transpose(s_omega_new, perm=[0, 2, 1, 3])
@@ -393,7 +393,7 @@ class GraphGenerator(object):
             node_feat,
             [self.hparams.combiner_hidden1, 1],
             activation_fn=tf.nn.tanh,
-            output_nonlinearity=tf.log_sigmoid,
+            output_act=tf.log_sigmoid,
             regularizer=None)
       s_mat = tf.reshape(s_mat, [batch_size, num_nodes, num_nodes])
       return s_mat

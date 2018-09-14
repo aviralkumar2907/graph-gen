@@ -27,6 +27,7 @@ import os
 import graphgen
 import hparams
 import data_utils as mdu
+import get_data
 
 flags = tf.app.flags
 flags.DEFINE_integer('seed', 8, 'Random seed')
@@ -78,6 +79,10 @@ flags.DEFINE_bool('only_score', False,
                   'Whether to just run the scoring part with no training.')
 flags.DEFINE_bool('measure_ROC', False,
                   'Whether to measure the ROC curve for the model.')
+flags.DEFINE_string('train_file', None,
+                    'Defines the path to the train file')
+flags.DEFINE_string('test_file', None,
+                    'Define the path to the test file.')
 FLAGS = flags.FLAGS
 
 def _print_trainable_vars():
@@ -103,6 +108,15 @@ def fill_feed_dict(*pairs):
 def _print_matrix_function(matrix):
   for i in matrix:
     print(i.tolist())
+
+def get_data_for_pass_new(dataset, placeholders, permute=False,
+                          n_node_types=1, n_edge_types=1,
+                          fake_data=False):
+  batch = dataset.next()
+  return fill_feed_dict((placeholders['z_in'], batch['adj_ph']),
+                        (placeholders['omega_in'], batch['node_ph']),
+                        (placeholders['edge_in'], batch['edge_features_ph']),
+                        (placeholders['mask_in'], batch['mask_ph']))
 
 def get_data_for_pass(dataset, placeholders, permute=False,
                       n_node_types=None,
@@ -294,7 +308,7 @@ def train(model_hparams,
       summary_writer = tf.summary.FileWriter(exp_dir, sess.graph)
 
       while gs < FLAGS.train_steps:
-        feed_dict = get_data_for_pass(train_data, placeholders, True,
+        feed_dict = get_data_for_pass_new(train_data, placeholders, True,
                                       n_node_types=n_node_types,
                                       n_edge_types=n_edge_types)
         if not FLAGS.only_score:
@@ -307,7 +321,7 @@ def train(model_hparams,
         if gs % eval_every == 0 and FLAGS.measure_ROC and FLAGS.only_score:
           log_prob_dataset = []
           for i in range(valid_data._n//FLAGS.batch_size):
-            feed_dict = get_data_for_pass(valid_data, placeholders, True,
+            feed_dict = get_data_for_pass_new(valid_data, placeholders, True,
                                         n_node_types=n_node_types,
                                         n_edge_types=n_edge_types,
                                         fake_data=False)
@@ -317,7 +331,7 @@ def train(model_hparams,
           # Perturb data to get random data values here
           log_prob_fake = []
           for i in range(valid_data._n//FLAGS.batch_size):
-            feed_dict = get_data_for_pass(valid_data, placeholders, True,
+            feed_dict = get_data_for_pass_new(valid_data, placeholders, True,
                                         n_node_types=n_node_types,
                                         n_edge_types=n_edge_types,
                                         fake_data=True)
@@ -354,10 +368,11 @@ def train(model_hparams,
             checkpoint_path = os.path.join(exp_dir, "model.ckpt")
             saver.save(sess, checkpoint_path, global_step=global_step)
 
+          continue
           avg_loss = 0.0
           avg_loss_per_dim = 0.0
           for i in range(valid_data._n//FLAGS.batch_size):
-            feed_dict = get_data_for_pass(valid_data, placeholders, True,
+            feed_dict = get_data_for_pass_new(valid_data, placeholders, True,
                                         n_node_types=n_node_types,
                                         n_edge_types=n_edge_types)
             loss_validation = sess.run(valid_loss, feed_dict)
@@ -474,8 +489,10 @@ def main(argv):
   if not tf.gfile.IsDirectory(FLAGS.exp_dir):
     tf.gfile.MakeDirs(FLAGS.exp_dir)
 
+  n_node_types=2
+  n_edge_types=1
   print ('Made directory')
-  train_set, val_set, _ = mdu.read_dataset(FLAGS.dataset)
+  '''train_set, val_set, _ = mdu.read_dataset(FLAGS.dataset)
   molecule_mapping = mdu.read_molecule_mapping_for_set(FLAGS.dataset)
   inv_mol_mapping = {v: k for k, v in enumerate(molecule_mapping)}
 
@@ -501,9 +518,12 @@ def main(argv):
       train_set, FLAGS.batch_size, shuffle=True)
   val_set = mdu.Dataset(
       val_set, FLAGS.batch_size, shuffle=True)
-
+  '''
   # n_node_types: number of node types (assumed categorical)
   # n_edge_types: number of edge types/ labels
+  train_set = get_data.Dataset(FLAGS.train_file, batch_size=FLAGS.batch_size)
+  test_set = get_data.Dataset(FLAGS.test_file, batch_size=FLAGS.batch_size)
+  val_set = test_set
   model_hparams = hparams.get_hparams_ChEMBL()
   print ('Number of node/edge types: ', n_node_types, n_edge_types)
   print ('Inside train function now...')

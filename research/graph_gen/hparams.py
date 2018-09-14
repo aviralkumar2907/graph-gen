@@ -26,7 +26,7 @@ FLAGS = flags.FLAGS
 
 
 def get_hparams_ChEMBL():
-  return tf.contrib.training.HParams(msg_dim=32,
+  return tf.contrib.training.HParams(msg_dim=2,
                                      edge_features_present=False,
                                      opt_type='adam',
                                      max_grad_norm=4.0,
@@ -36,9 +36,9 @@ def get_hparams_ChEMBL():
                                      use_similarity_in_space=False,
                                      omega_hidden1=10,
                                      omega_hidden2=10,
-                                     msg_hidden1=32,
-                                     msg_hidden2=32,
-                                     combiner_hidden1=32,
+                                     msg_hidden1=16,
+                                     msg_hidden2=2,
+                                     combiner_hidden1=16,
                                      num_steps=2,
                                      omega_scale1=40,
                                      omega_scale2=20,

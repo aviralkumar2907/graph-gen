@@ -1,0 +1,68 @@
+Traceback (most recent call last):
+  File "trainer.py", line 27, in <module>
+    import graphgen
+  File "/home/aviralkumar2907/graph_gen/graph-gen/research/graph_gen/graphgen.py", line 25, in <module>
+    import real_NVP
+  File "/home/aviralkumar2907/graph_gen/graph-gen/research/graph_gen/real_NVP.py", line 286, in <module>
+    class BatchNormBijector(tf.contrib.distributions.bijectors.BatchNormalization):
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/lazy_loader.py", line 53, in __getattr__
+    module = self._load()
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/lazy_loader.py", line 42, in _load
+    module = importlib.import_module(self.__name__)
+  File "/usr/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/__init__.py", line 51, in <module>
+    from tensorflow.contrib import keras
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/keras/__init__.py", line 28, in <module>
+    from tensorflow.contrib.keras.api.keras import *
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/keras/api/keras/__init__.py", line 29, in <module>
+    from tensorflow.contrib.keras.api.keras import constraints
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/keras/api/keras/constraints/__init__.py", line 34, in <module>
+    from tensorflow.python.keras.constraints import deserialize
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "trainer.py", line 27, in <module>
+    import graphgen
+  File "/home/aviralkumar2907/graph_gen/graph-gen/research/graph_gen/graphgen.py", line 25, in <module>
+    import real_NVP
+  File "/home/aviralkumar2907/graph_gen/graph-gen/research/graph_gen/real_NVP.py", line 286, in <module>
+    class BatchNormBijector(tf.contrib.distributions.bijectors.BatchNormalization):
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/lazy_loader.py", line 53, in __getattr__
+    module = self._load()
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/lazy_loader.py", line 42, in _load
+    module = importlib.import_module(self.__name__)
+  File "/usr/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/__init__.py", line 40, in <module>
+    from tensorflow.contrib import distributions
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/distributions/__init__.py", line 38, in <module>
+    from tensorflow.contrib.distributions.python.ops.estimator import *
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/distributions/python/ops/estimator.py", line 21, in <module>
+    from tensorflow.contrib.learn.python.learn.estimators.head import _compute_weighted_loss
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/learn/__init__.py", line 95, in <module>
+    from tensorflow.contrib.learn.python.learn import *
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/learn/python/__init__.py", line 28, in <module>
+    from tensorflow.contrib.learn.python.learn import *
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/learn/python/learn/__init__.py", line 28, in <module>
+    from tensorflow.contrib.learn.python.learn import basic_session_run_hooks
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/contrib/learn/python/learn/basic_session_run_hooks.py", line 41, in <module>
+    basic_session_run_hooks.CheckpointSaverHook)
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/deprecation.py", line 168, in deprecated_alias
+    class _NewClass(func_or_class):  # pylint: disable=missing-docstring
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/deprecation.py", line 175, in _NewClass
+    __module__ = _call_location(outer=True)
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/deprecation.py", line 73, in _call_location
+    frame = tf_inspect.currentframe()
+  File "/usr/local/lib/python3.5/dist-packages/tensorflow/python/util/tf_inspect.py", line 42, in currentframe
+    return _inspect.stack()[1][0]
+  File "/usr/lib/python3.5/inspect.py", line 1464, in stack
+    return getouterframes(sys._getframe(1), context)
+  File "/usr/lib/python3.5/inspect.py", line 1441, in getouterframes
+    frameinfo = (frame,) + getframeinfo(frame, context)
+  File "/usr/lib/python3.5/inspect.py", line 1410, in getframeinfo
+    filename = getsourcefile(frame) or getfile(frame)
+  File "/usr/lib/python3.5/inspect.py", line 672, in getsourcefile
+    if getattr(getmodule(object, filename), '__loader__', None) is not None:
+  File "/usr/lib/python3.5/inspect.py", line 709, in getmodule
+    if ismodule(module) and hasattr(module, '__file__'):
+KeyboardInterrupt

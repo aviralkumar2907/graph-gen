@@ -31,15 +31,20 @@ FLAGS = flags.FLAGS
 def mlp(inputs,
         layer_sizes,
         activation_fn=tf.nn.relu,
-        output_act=None):
+        output_act=None,
+        regularizer=None):
+  print ('MLP in: ', inputs)
   prev_size = inputs.get_shape().as_list()[-1]
   shape_inp = tf.shape(inputs)
+  print ('Shape in MLP: ', inputs.get_shape().as_list())
   if len(inputs.get_shape().as_list()) > 2:
-    out = tf.reshape(inputs, [-1, shape_inp[2]])
+    out = tf.reshape(inputs, [-1, inputs.get_shape().as_list()[2]])
   else:
-    out = tf.reshape(inputs, [-1, shape_inp[1]])
+    out = tf.reshape(inputs, [-1, inputs.get_shape().as_list()[1]])
+  print ('OUT: ', out)
+  print ('Shape Inp: ', shape_inp)
   for i, layer_size in enumerate(layer_sizes):
-    z = tf.layers.fully_connected(out, layer_size, activation_fn)
+    z = tf.layers.dense(out, layer_size, activation=None)
 
     if i < len(layer_sizes) - 1 and activation_fn is not None:
       out = activation_fn(z)
@@ -60,6 +65,7 @@ def message_fn(params, model_hparams):
   node_dim = model_hparams.node_dim
   msg_dim = model_hparams.msg_dim
 
+  print ('Node states: ', node_states)
   with tf.variable_scope('message_fn', reuse=tf.AUTO_REUSE):
     msg_function = mlp(node_states,
             layer_sizes=[model_hparams.msg_hidden1, model_hparams.msg_hidden2],
@@ -67,10 +73,12 @@ def message_fn(params, model_hparams):
             output_act=tf.nn.tanh)
   # This could be a soft matrix, in which case we are taking a sum over all
   # possible edges/neighbours.
+  msg_function = tf.Print(msg_function, [tf.shape(msg_function)], summarize=100, message='msg_function')
   adj_mat = params['adj_mat']
   temp_mask = tf.expand_dims(mask, 2)
   mask = tf.multiply(temp_mask, tf.transpose(temp_mask, (0, 2, 1)))
   adj_mat = adj_mat * mask
+  print ('Reached Here.....')
 
   if FLAGS.use_edge_features:
     edge_features = params['edge_feat']
@@ -119,6 +127,7 @@ def aggn_fn(msg_matrix):
 
 def update_fn(params, model_hparams):
   node_states = params['node_states']
+  node_states = tf.Print(node_states, [tf.shape(node_states)], summarize=100, message='DEBUG')
   msg_vec = params['agg_msg']
   mask = params['mask']
   batch_size = tf.shape(node_states)[0]
@@ -263,6 +272,8 @@ class GraphNet(object):
                                   self.state_fn,
                                   params,
                                   self.hparams)
+
+    print ('Node dim: ', self.hparams.node_dim)
     rev_mp = rev_GNN.rev_mp_block(
                             node_states[:, :, :(self.hparams.node_dim)],
                             node_states[:, :, (self.hparams.node_dim):],
